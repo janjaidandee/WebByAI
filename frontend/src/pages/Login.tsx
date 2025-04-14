@@ -21,25 +21,23 @@ const Login: React.FC = () => {
   const handleGoogleLogin = () => {
     signInWithPopup(auth, provider)
       .then((result) => {
-        const user = result.user;
-
-        alert(`ยินดีต้อนรับ ${user.displayName}`);
-
-        // ส่ง user ไป Mainpage พร้อมข้อมูล
-        navigate('/main', {
-          state: {
-            user: {
-              displayName: user.displayName,
-              email: user.email,
-              photoURL: user.photoURL
-            }
-          }
-        });
+        const user = {
+          displayName: result.user.displayName,
+          email: result.user.email,
+          photoURL: result.user.photoURL
+        };
+  
+        // 💾 เก็บ user ลงใน sessionStorage
+        sessionStorage.setItem('user', JSON.stringify(user));
+  
+        // 👉 redirect โดยไม่ส่ง state แล้ว
+        navigate('/main');
       })
       .catch((error) => {
         console.error('Google Login Error:', error);
       });
   };
+  
 
 
 

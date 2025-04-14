@@ -1,16 +1,20 @@
-import React from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Mainpage: React.FC = () => {
-  const location = useLocation();
   const navigate = useNavigate();
-  const user = location.state?.user;
+  const [user, setUser] = useState<any>(null);
 
-  if (!user) {
-    // ถ้าไม่มี user กลับไปหน้า Login
-    navigate('/');
-    return null;
-  }
+  useEffect(() => {
+    const stored = sessionStorage.getItem('user');
+    if (stored) {
+      setUser(JSON.parse(stored));
+    } else {
+      navigate('/');
+    }
+  }, [navigate]);
+
+  if (!user) return null;
 
   return (
     <div className="d-flex justify-content-center align-items-center bg-light" style={{ height: '100vh' }}>
