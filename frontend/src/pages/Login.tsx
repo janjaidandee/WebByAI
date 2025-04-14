@@ -43,8 +43,9 @@ const Login: React.FC = () => {
             className="w-100 h-100"
             style={{
               objectFit: 'cover',
-              objectPosition: '-82px center',
-              borderRadius: '30px'
+              objectPosition: mode === 'login' ? '-82px center' : '-160px center',
+              transform: mode === 'signup' ? 'scaleX(-1)' : 'none',
+              borderRadius: '30px',
             }}
           />
         </div>
@@ -57,7 +58,7 @@ const Login: React.FC = () => {
             left: mode === 'login' ? '50%' : '0%',
             width: '50%',
             height: '100%',
-            zIndex: 3,
+            zIndex: 1,
             background: '#fff',
             display: 'flex',
             flexDirection: 'column',
