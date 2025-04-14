@@ -2,13 +2,47 @@ import React, { useState } from 'react';
 import logingirl from '../assets/login2.png';
 import loginboy from '../assets/login3.png';
 
+import { useNavigate } from 'react-router-dom';
+
+
+import { signInWithPopup } from 'firebase/auth';
+import { auth, provider } from '../firebase'; // อย่าลืมสร้าง firebase.ts ก่อน
+
 const Login: React.FC = () => {
+  const navigate = useNavigate();
+
   const [mode, setMode] = useState<'login' | 'signup'>('login');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const Clicksignup = () => setMode('signup');
   const Clicklogin = () => setMode('login');
+
+  const handleGoogleLogin = () => {
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        const user = result.user;
+
+        alert(`ยินดีต้อนรับ ${user.displayName}`);
+
+        // ส่ง user ไป Mainpage พร้อมข้อมูล
+        navigate('/main', {
+          state: {
+            user: {
+              displayName: user.displayName,
+              email: user.email,
+              photoURL: user.photoURL
+            }
+          }
+        });
+      })
+      .catch((error) => {
+        console.error('Google Login Error:', error);
+      });
+  };
+
+
+
 
   return (
     <div className="container-fluid d-flex justify-content-center align-items-center bg-light" style={{ minHeight: '100vh' }}>
@@ -124,6 +158,21 @@ const Login: React.FC = () => {
               {mode === 'login' ? 'LOGIN' : 'SIGNUP'}
             </button>
           </form>
+          <button
+            type="button"
+            className="btn btn-outline-dark w-80 d-flex align-items-center justify-content-center"
+            onClick={handleGoogleLogin}
+            style={{ marginTop: '10px' }}
+          >
+            <img
+              src="https://services.google.com/fh/files/misc/google_g_icon_download.png"
+              alt="Google"
+              style={{ width: '20px', height: '20px', marginRight: '10px' }}
+            />
+            <span>Continue with Google</span>
+          </button>
+
+
 
           <div className="text-center">
             {mode === 'login' ? (
